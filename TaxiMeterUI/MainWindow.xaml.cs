@@ -32,5 +32,36 @@ namespace TaxiMeterUI
             // Update the TextBlock with the current date and time.
             txtDateTime.Text = DateTime.Now.ToString();
         }
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnPayment_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnEnd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnTariff_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtTariff.Text == "Tariff" || txtTariff.Text == "Tariff 3")
+            {
+                txtTariff.Text = "Tariff 1";
+            }
+            else if ( txtTariff.Text == "Tariff 1")
+            {
+                txtTariff.Text = "Tariff 2";
+            }
+            else if ( txtTariff.Text == "Tariff 2")
+            {
+                txtTariff.Text = "Tariff 3";
+            }
+        }
     }
 }

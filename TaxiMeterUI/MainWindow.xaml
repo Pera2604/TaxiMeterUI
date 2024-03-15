@@ -32,15 +32,15 @@
         </Border>
         <Button x:Name="btnTariff" Width="75" Height="40" HorizontalAlignment="Right" 
                 VerticalAlignment="Bottom" Margin="0,0,20,10" Content="Tariff"
-                FontSize="18" />
+                FontSize="18" Click="btnTariff_Click" />
 
         <!-- Grid.Row 1-->
         <Button x:Name="btnStart" Grid.Row="1" Width="100" HorizontalAlignment="Left"
-            Margin="100,5,0,5" Content="Start" FontSize="20" />
+            Margin="100,5,0,5" Content="Start" FontSize="20" Click="btnStart_Click" />
         <Button x:Name="btnPayment" Grid.Row="1" Width="100" HorizontalAlignment="Center"
-                Margin="0,5,0,5" Content="Payment" FontSize="20" />
+                Margin="0,5,0,5" Content="Payment" FontSize="20" Click="btnPayment_Click" />
         <Button x:Name="btnEnd" Grid.Row="1" Width="100" HorizontalAlignment="Right"
-            Margin="0,5,100,5" Content="End" FontSize="20" />
+            Margin="0,5,100,5" Content="End" FontSize="20" Click="btnEnd_Click" />
 
         <!--Grid.Row 2-->
         <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Margin="0,0,0,21" />
