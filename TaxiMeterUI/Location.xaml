@@ -1,0 +1,54 @@
+﻿<Window x:Class="TaxiMeterUI.Location"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaxiMeterUI"
+        mc:Ignorable="d"
+        Title="Please enter locations information" Height="250" Width="500">
+    <Grid>
+        <!--Pickup Location Information-->
+        <TextBlock Text="Pickup Location information:" HorizontalAlignment="Left" 
+            FontSize="18" Height="25" VerticalAlignment="Top"/>
+        
+        <!--Name-->
+        <TextBlock Text="Name: " HorizontalAlignment="Left" FontSize="18" Height="25"
+            VerticalAlignment="Top" Margin="5,25,0,0"/>
+        <TextBox HorizontalAlignment="Left" Width="100" VerticalAlignment="Top" 
+            Margin="65,25,0,0" FontSize="18"/>
+        <!--Latitude-->
+        <TextBlock Text="Latitude: " HorizontalAlignment="Left" FontSize="18" Height="25"
+            VerticalAlignment="Top" Margin="5,55,0,0"/>
+        <TextBox x:Name="tbPickupLocationLat" HorizontalAlignment="Left" Width="100"
+            VerticalAlignment="Top" Margin="80,55,0,0" FontSize="18"/>
+        <!--Longitude-->
+        <TextBlock Text="Longitude: " HorizontalAlignment="Left" FontSize="18" Height="25"
+            VerticalAlignment="Top" Margin="5,90,0,0"/>
+        <TextBox x:Name="tbPickupLocationLong" HorizontalAlignment="Left" Width="100"
+            VerticalAlignment="Top" Margin="95,90,0,0" FontSize="18"/>
+        
+        <!--Destination Information-->
+        <TextBlock Text="Destination information:" HorizontalAlignment="Right" 
+           FontSize="18" Height="25" VerticalAlignment="Top" Margin="0,0,10,0"/>
+
+        <!--Name-->
+        <TextBlock Text="Name: " HorizontalAlignment="Right" FontSize="18" Height="25"
+            VerticalAlignment="Top" Margin="0,25,105,0"/>
+        <TextBox HorizontalAlignment="Right" Width="100" VerticalAlignment="Top" 
+            Margin="65,25,5,0" FontSize="18"/>
+        <!--Latitude-->
+        <TextBlock Text="Latitude: " HorizontalAlignment="Right" FontSize="18" Height="25"
+            VerticalAlignment="Top" Margin="5,55,105,0"/>
+        <TextBox x:Name="tbDestinationLat" HorizontalAlignment="Right" Width="100"
+            VerticalAlignment="Top" Margin="80,55,5,0" FontSize="18"/>
+        <!--Longitude-->
+        <TextBlock Text="Longitude: " HorizontalAlignment="Right" FontSize="18" Height="25"
+            VerticalAlignment="Top" Margin="5,90,105,0"/>
+        <TextBox x:Name="tbDestinationLong" HorizontalAlignment="Right" Width="100"
+            VerticalAlignment="Top" Margin="95,90,5,0" FontSize="18"/>
+
+
+        <Button Content="OK" Click="OkButton_Click" Height="40" Margin="0,50,0,0"
+            VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>
