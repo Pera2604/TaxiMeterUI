@@ -1,16 +1,6 @@
-﻿using System.ComponentModel;
-using System.Text;
-using System.Timers;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+using System.Windows.Controls.Primitives;
 
 namespace TaxiMeterUI
 {
@@ -20,44 +10,94 @@ namespace TaxiMeterUI
         {
             InitializeComponent();
             mainGrid.RowDefinitions[2].Height = new GridLength(0);
-            DateAndTime();
+            //DateAndTime();
         }
 
-        private void DateAndTime()
+        private const double avarageSpeedPerHour = 30;
+
+        private double distanceRate;
+
+        private double durationRate;
+
+        private double pickupLocationLat;
+
+        private double pickupLocationLong;
+
+        private double destinationLat;
+
+        private double destinationLong;
+
+        public double DistanceRate
         {
-            //Start a DispatcherTimer to update the TextBlock every second.
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            get { return distanceRate; }
+            set { distanceRate = value; }
+        }
+        public double DurationRate
+        {
+            get { return durationRate; }
+            set { durationRate = value; }
+        }
+        public double PickupLocationLat
+        {
+            get { return pickupLocationLat; }
+            set { pickupLocationLat = value; }
+        }
+        public double PickupLocationLong
+        {
+            get { return pickupLocationLong; }
+            set { pickupLocationLong = value; }
+        }
+        public double DestinationLat
+        {
+            get { return destinationLat; }
+            set { destinationLat = value; }
+        }
+        public double DestinationLong
+        {
+            get { return destinationLong; }
+            set { destinationLong = value; }
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            // Update the TextBlock with the current date and time.
-            txtDateTime.Text = DateTime.Now.ToString();
-        }
+
+        //private void DateAndTime()
+        //{
+        //    //Start a DispatcherTimer to update the TextBlock every second.
+        //    DispatcherTimer timer = new DispatcherTimer();
+        //    timer.Interval = TimeSpan.FromSeconds(1);
+        //    timer.Tick += Timer_Tick;
+        //    timer.Start();
+        //}
+
+        //private void Timer_Tick(object sender, EventArgs e)
+        //{
+        //    // Update the TextBlock with the current date and time.
+        //    txtDateTime.Text = DateTime.Now.ToString();
+        //}
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            txtStatus.Text = "Status: Hired";
-            string startTime = DateTime.Now.ToString();
+            Location location = new Location();
 
+            txtStatus.Text = "Status: Hired";
+
+            string startTime = DateTime.Now.ToString();
             txtStartTime.Text = $"Start Time: {startTime}";
+
+            double distance = location.CalculateDistance(PickupLocationLat, PickupLocationLong, DestinationLat, DestinationLong);
+            txtDistance.Text = $"Distance travelled: {distance:0.00} km";
         }
 
         private void btnPayment_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void btnEnd_Click(object sender, RoutedEventArgs e)
         {
             mainGrid.RowDefinitions[2].Height = new GridLength(200);
-
             txtStatus.Text = "Status: For Hire";
-            string endTime = DateTime.Now.ToString();
 
+            string endTime = DateTime.Now.ToString();
             txtEndTime.Text = $"End Time: {endTime}";
         }
 
@@ -66,29 +106,65 @@ namespace TaxiMeterUI
             if (txtTariff.Text == "Tariff" || txtTariff.Text == "Tariff 3")
             {
                 txtTariff.Text = "Tariff 1";
+                DistanceRate = 1.09;
+                DurationRate = 0.283;
             }
-            else if ( txtTariff.Text == "Tariff 1")
+            else if (txtTariff.Text == "Tariff 1")
             {
                 txtTariff.Text = "Tariff 2";
+                DistanceRate = 1.80;
+                DurationRate = 0.40;
             }
-            else if ( txtTariff.Text == "Tariff 2")
+            else if (txtTariff.Text == "Tariff 2")
             {
                 txtTariff.Text = "Tariff 3";
+                DistanceRate = 2.00;
+                DurationRate = 0.50;
             }
         }
 
         private void btnRideInfo_Click(object sender, RoutedEventArgs e)
         {
             Location popup = new Location();
+            popup.ShowDialog();
 
-            if (popup.ShowDialog() == true)
-            {
-                int pickupLocationLat = popup.PickupLocationLatitude;
-                int pickupLocationLong = popup.PickupLocationLongitude;
+            PickupLocationLat = popup.PickupLocationLatitude;
+            PickupLocationLong = popup.PickupLocationLongitude;
 
-                int destinationLat = popup.DestinationLatitude;
-                int destinationLong = popup.DestinationLongitude;
-            }
+            DestinationLat = popup.DestinationLatitude;
+            DestinationLong = popup.DestinationLongitude;
         }
+
+        public double CalculateRideDuration(double distance)
+        {
+            double durationInHours = distance / avarageSpeedPerHour;
+
+            double durationInMinutes = durationInHours * 60;
+
+            return durationInMinutes;
+        }
+        //private double CalculatePrice()
+        //{
+
+
+        //    return totalDistanceFare + totalDurationFare;
+        //}
+
+        //public double CalculateFare(Location pickupLocation, Location destination)
+        //{
+        //    double distance = pickupLocation.CalculateHaversineDistance(destination);
+        //    Console.WriteLine($"Distance traveled: {distance:0.00} km");
+
+        //    double totalDistanceFare = distance * distanceRate;
+        //    Console.WriteLine($"Total Distance Fare: {totalDistanceFare:0.00} EUR \n");
+
+        //    double duration = CalculateRideDuration(distance);
+        //    Console.WriteLine($"Duration of the ride in minutes: {duration:0.00}");
+
+        //    double totalDurationFare = duration * durationRate;
+        //    Console.WriteLine($"Total Duration Fare: {totalDurationFare:0.00} EUR \n");
+
+        //    return totalDistanceFare + totalDurationFare;
+        //}
     }
 }
