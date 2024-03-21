@@ -1,9 +1,16 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TaxiMeterUI
 {
+    // Insta Requests
+
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -12,8 +19,9 @@ namespace TaxiMeterUI
             mainGrid.RowDefinitions[2].Height = new GridLength(0);
             //DateAndTime();
         }
+        private CancellationTokenSource cancellationTokenSource;
 
-        private const double avarageSpeedPerHour = 30;
+        private const double averageSpeedPerHour = 30;
 
         private double distanceRate;
 
@@ -27,6 +35,14 @@ namespace TaxiMeterUI
 
         private double destinationLong;
 
+        private double distance;
+
+        private double duration;
+
+        private double price;
+
+        // delete
+        private double liveTaxiPrice;
         public double DistanceRate
         {
             get { return distanceRate; }
@@ -57,7 +73,28 @@ namespace TaxiMeterUI
             get { return destinationLong; }
             set { destinationLong = value; }
         }
+        public double Distance
+        {
+            get { return distance; }
+            set { distance = value; }
+        }
+        public double Duration
+        {
+            get { return duration; }
+            set { duration = value; }
+        }
+        public double Price
+        {
+            get { return price; }
+            set {  price = value; }
+        }
 
+        // not needed, delete
+        public double LiveTaxiPrice
+        {
+            get { return liveTaxiPrice; }
+            set {  liveTaxiPrice = value; }
+        }
 
         //private void DateAndTime()
         //{
@@ -72,24 +109,46 @@ namespace TaxiMeterUI
         //{
         //    // Update the TextBlock with the current date and time.
         //    txtDateTime.Text = DateTime.Now.ToString();
-        //}
+        //} Osrm
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+            }
+
+            cancellationTokenSource = new CancellationTokenSource();
             Location location = new Location();
 
             txtStatus.Text = "Status: Hired";
 
             string startTime = DateTime.Now.ToString();
-            txtStartTime.Text = $"Start Time: {startTime}";
+            txtStartTime.Text = $"Start time: {startTime}";
 
-            double distance = location.CalculateDistance(PickupLocationLat, PickupLocationLong, DestinationLat, DestinationLong);
-            txtDistance.Text = $"Distance travelled: {distance:0.00} km";
+            Distance = location.CalculateDistance(PickupLocationLat, PickupLocationLong, DestinationLat, DestinationLong);
+            txtDistance.Text = $"Distance travelled: {Distance:0.00} km";
+
+            Duration = CalculateRideDuration();
+            txtDuration.Text = $"Duration: {Duration:0.00} minutes";
+
+            DefaultTariffValue();
+            Price = CalculatePrice();
+            double totalPrice = Price;
+            txtTotalPrice.Text = $"Total Price: {totalPrice:0.00} EUR";
+
+            await LiveTaxiFare(Distance, cancellationTokenSource.Token);
         }
 
         private void btnPayment_Click(object sender, RoutedEventArgs e)
         {
-
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
+            }
         }
 
         private void btnEnd_Click(object sender, RoutedEventArgs e)
@@ -98,7 +157,7 @@ namespace TaxiMeterUI
             txtStatus.Text = "Status: For Hire";
 
             string endTime = DateTime.Now.ToString();
-            txtEndTime.Text = $"End Time: {endTime}";
+            txtEndTime.Text = $"End time: {endTime}";
         }
 
         private void btnTariff_Click(object sender, RoutedEventArgs e)
@@ -135,36 +194,72 @@ namespace TaxiMeterUI
             DestinationLong = popup.DestinationLongitude;
         }
 
-        public double CalculateRideDuration(double distance)
+        private double CalculateRideDuration()
         {
-            double durationInHours = distance / avarageSpeedPerHour;
+            double durationInHours = Distance / averageSpeedPerHour;
 
             double durationInMinutes = durationInHours * 60;
 
             return durationInMinutes;
         }
-        //private double CalculatePrice()
+
+        private double CalculatePrice()
+        { 
+            double totalDistancePrice = Distance * distanceRate;
+
+            double totalDurationPrice = Duration * durationRate;
+
+            return totalDistancePrice + totalDurationPrice;
+        }
+
+        // veriable probably better than Property in this case ( value never resets for property just keeps on adding on to it)
+        private async Task LiveTaxiFare(double distance, CancellationToken cancellationToken)
+        {
+            double liveDistance = 0;
+            double tenthOfDistance = distance / 10;
+
+            for (int i = 1; i <= 10 || LiveTaxiPrice <= Price; i++)
+            {
+                liveDistance += tenthOfDistance;
+                double tenthOfPrice = liveDistance * distanceRate;
+                LiveTaxiPrice += tenthOfPrice;
+
+                if (cancellationToken.IsCancellationRequested)
+                    break;
+
+                txtPrice.Text = $"Price: {LiveTaxiPrice:0.00} EUR";
+
+                await Task.Delay(1000);
+            }
+        }
+
+        private void DefaultTariffValue()
+        {
+            if( distanceRate == 0 || durationRate == 0 ) 
+            {
+                txtTariff.Text = "Tariff 1";
+                DistanceRate = 1.09;
+                DurationRate = 0.283;
+            }
+        }
+
+        // Average Speed Logic Problem - .txt file
+
+        //private double CalculateAverageSpeed()
         //{
+        //    DateTime startDateTime = new DateTime();
+        //    DateTime endDateTime = new DateTime();
 
+        //    startDateTime = DateTime.ParseExact(txtStartTime.Text, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+        //    endDateTime = DateTime.ParseExact(txtEndTime.Text,"dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
-        //    return totalDistanceFare + totalDurationFare;
-        //}
+        //    Duration = (endDateTime - startDateTime).TotalSeconds;
+        //    txtDuration.Text = $"Duration: {Duration} seconds";
 
-        //public double CalculateFare(Location pickupLocation, Location destination)
-        //{
-        //    double distance = pickupLocation.CalculateHaversineDistance(destination);
-        //    Console.WriteLine($"Distance traveled: {distance:0.00} km");
+        //    double averageSpeed = Distance / Duration;
+        //    txtAverageSpeed.Text = $"Average Speed: {averageSpeed} km/s";
 
-        //    double totalDistanceFare = distance * distanceRate;
-        //    Console.WriteLine($"Total Distance Fare: {totalDistanceFare:0.00} EUR \n");
-
-        //    double duration = CalculateRideDuration(distance);
-        //    Console.WriteLine($"Duration of the ride in minutes: {duration:0.00}");
-
-        //    double totalDurationFare = duration * durationRate;
-        //    Console.WriteLine($"Total Duration Fare: {totalDurationFare:0.00} EUR \n");
-
-        //    return totalDistanceFare + totalDurationFare;
+        //    return averageSpeed;
         //}
     }
 }

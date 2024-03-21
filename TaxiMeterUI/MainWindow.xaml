@@ -52,6 +52,7 @@
             <TextBlock x:Name="txtEndTime" Text="End time:" FontSize="18"/>
             <TextBlock x:Name="txtTotalPrice" Text="Total Price:" FontSize="18"/>
             <TextBlock x:Name="txtDistance" Text="Distance travelled:" FontSize="18"/>
+            <TextBlock x:Name="txtDuration" Text="Duration:" FontSize="18"/>
         </StackPanel>
     </Grid>
 </Window>

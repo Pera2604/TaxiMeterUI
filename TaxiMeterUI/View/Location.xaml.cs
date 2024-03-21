@@ -43,7 +43,7 @@ namespace TaxiMeterUI
             PickupLocationLongitude = InputLongitude(tbPickupLocationLong.Text);
             DestinationLongitude = InputLongitude(tbDestinationLong.Text);
 
-            if (PickupLocationLatitude != -1 || PickupLocationLongitude != -1 || DestinationLatitude != -1 || DestinationLongitude != -1) 
+            if (PickupLocationLatitude != -1 && PickupLocationLongitude != -1 && DestinationLatitude != -1 && DestinationLongitude != -1) 
             {
                 Close();
             }
