@@ -41,8 +41,6 @@ namespace TaxiMeterUI
 
         private double price;
 
-        // delete
-        private double liveTaxiPrice;
         public double DistanceRate
         {
             get { return distanceRate; }
@@ -87,13 +85,6 @@ namespace TaxiMeterUI
         {
             get { return price; }
             set {  price = value; }
-        }
-
-        // not needed, delete
-        public double LiveTaxiPrice
-        {
-            get { return liveTaxiPrice; }
-            set {  liveTaxiPrice = value; }
         }
 
         //private void DateAndTime()
@@ -215,19 +206,19 @@ namespace TaxiMeterUI
         // veriable probably better than Property in this case ( value never resets for property just keeps on adding on to it)
         private async Task LiveTaxiFare(double distance, CancellationToken cancellationToken)
         {
+            double liveTaxiPrice;
             double liveDistance = 0;
             double tenthOfDistance = distance / 10;
 
-            for (int i = 1; i <= 10 || LiveTaxiPrice <= Price; i++)
+            for (int i = 1; i <= 10; i++)
             {
-                liveDistance += tenthOfDistance;
-                double tenthOfPrice = liveDistance * distanceRate;
-                LiveTaxiPrice += tenthOfPrice;
-
                 if (cancellationToken.IsCancellationRequested)
                     break;
 
-                txtPrice.Text = $"Price: {LiveTaxiPrice:0.00} EUR";
+                liveDistance += tenthOfDistance;
+                liveTaxiPrice = liveDistance * distanceRate;
+
+                txtPrice.Text = $"Price: {liveTaxiPrice:0.00} EUR";
 
                 await Task.Delay(1000);
             }
