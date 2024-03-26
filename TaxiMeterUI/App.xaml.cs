@@ -12,19 +12,7 @@ namespace TaxiMeterUI
     {
         public App()
         {
-            InitializeComponent();
-            Exit += App_Exit;
-        }
-
-
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
-            DispatcherTimer timer = new DispatcherTimer();
-            if (timer != null)
-            {
-                timer.Stop();
-                timer = null;
-            }
+            
         }
     }
 }

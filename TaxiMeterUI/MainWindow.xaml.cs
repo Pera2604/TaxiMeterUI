@@ -1,28 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Threading;
-using System.Windows.Controls.Primitives;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Numerics;
+using TaxiMeterUI.View;
 
 namespace TaxiMeterUI
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            mainGrid.RowDefinitions[2].Height = new GridLength(0);
-            DateAndTime();
-        }
+        private const double averageSpeedPerHour = 30;
+
+        private DispatcherTimer timer = new DispatcherTimer();
 
         private CancellationTokenSource cancellationTokenSource;
-
-        private const double averageSpeedPerHour = 30;
 
         private double totalLiveTaxiPrice;
 
@@ -94,10 +82,17 @@ namespace TaxiMeterUI
             set {  price = value; }
         }
 
+        public MainWindow()
+        {
+            InitializeComponent();
+            mainGrid.RowDefinitions[2].Height = new GridLength(0);
+            DateAndTime();
+            Closing += MainWindow_Closing; // Subscribe to the Closing event
+        }
+
         private void DateAndTime()
         {
             //Start a DispatcherTimer to update the TextBlock every second.
-            DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
@@ -107,6 +102,16 @@ namespace TaxiMeterUI
         {
             // Update the TextBlock with the current date and time.
             txtDateTime.Text = DateTime.Now.ToString();
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // stops the timer from continuing to calculate the time even tho the program is closed 
+            if (timer != null)
+            {
+                timer.Stop();
+                timer = null;
+            }
         }
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
@@ -166,6 +171,7 @@ namespace TaxiMeterUI
                 txtEndTime.Text = $"End time: {endTime}";
             }
         }
+
         private void btnTariff_Click(object sender, RoutedEventArgs e)
         {
             if (txtTariff.Text == "Tariff" || txtTariff.Text == "Tariff 3")
@@ -190,15 +196,29 @@ namespace TaxiMeterUI
 
         private void btnRideInfo_Click(object sender, RoutedEventArgs e)
         {
-            Location popup = new Location();
+            LocationWindow popup = new LocationWindow();
+            Location location = new Location();
             popup.ShowDialog();
 
-            PickupLocationLat = popup.PickupLocationLatitude;
-            PickupLocationLong = popup.PickupLocationLongitude;
+            PickupLocationLat = location.PickupLocationLatitude;
+            PickupLocationLong = location.PickupLocationLongitude;
 
-            DestinationLat = popup.DestinationLatitude;
-            DestinationLong = popup.DestinationLongitude;
+            DestinationLat = location.DestinationLatitude;
+            DestinationLong = location.DestinationLongitude;
         }
+
+        // no worki worki
+
+        //private void LocationCordinates(out double lat1, out double lat2, out double long1, out double long2)
+        //{
+        //    Location location = new Location();
+
+        //    lat1 = location.PickupLocationLatitude;
+        //    long1 = location.PickupLocationLongitude;
+
+        //    lat2 = location.DestinationLatitude;
+        //    long2 = location.DestinationLongitude;
+        //}
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {

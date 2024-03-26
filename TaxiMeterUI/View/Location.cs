@@ -1,15 +1,9 @@
 ﻿using System.Windows;
-using TaxiMeterUI;
 
-namespace TaxiMeterUI
+namespace TaxiMeterUI.View
 {
-    public partial class Location : Window
+    internal class Location
     {
-        public Location()
-        {
-            InitializeComponent();
-        }
-
         private double pickupLocationLatitude;
 
         private double pickupLocationLongitude;
@@ -38,20 +32,6 @@ namespace TaxiMeterUI
             set { destinationLongitude = value; }
         }
 
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            PickupLocationLatitude = InputLatitude(tbPickupLocationLat.Text);
-            DestinationLatitude = InputLatitude(tbDestinationLat.Text);
-
-            PickupLocationLongitude = InputLongitude(tbPickupLocationLong.Text);
-            DestinationLongitude = InputLongitude(tbDestinationLong.Text);
-
-            if (PickupLocationLatitude != -1 && PickupLocationLongitude != -1 && DestinationLatitude != -1 && DestinationLongitude != -1) 
-            {
-                Close();
-            }
-        }
-
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
             const double earthRadius = 6371; // Radius of the Earth in kilometers
@@ -77,7 +57,7 @@ namespace TaxiMeterUI
             return angle * (Math.PI / 180);
         }
 
-        private double InputLatitude(string propertyValue)
+        public double InputLatitude(string propertyValue)
         {
             if (double.TryParse(propertyValue, out double result))
             {
@@ -98,7 +78,7 @@ namespace TaxiMeterUI
             }
         }
 
-        private double InputLongitude(string propertyValue)
+        public double InputLongitude(string propertyValue)
         {
             if (double.TryParse(propertyValue, out double result))
             {
