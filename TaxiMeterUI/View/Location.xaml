@@ -9,18 +9,18 @@
     <Grid>
         <!--Pickup Location Information-->
         <TextBlock Text="Pickup Location information:" HorizontalAlignment="Left" 
-            FontSize="18" Height="25" VerticalAlignment="Top"/>
+            FontSize="18" Height="25" VerticalAlignment="Top" Margin="10,0,0,0"/>
         
         <!--Name-->
         <TextBlock Text="Name: " HorizontalAlignment="Left" FontSize="18" Height="25"
-            VerticalAlignment="Top" Margin="5,25,0,0"/>
+            VerticalAlignment="Top" Margin="35,25,0,0"/>
         <TextBox HorizontalAlignment="Left" Width="100" VerticalAlignment="Top" 
-            Margin="65,25,0,0" FontSize="18"/>
+            Margin="95,25,0,0" FontSize="18"/>
         <!--Latitude-->
         <TextBlock Text="Latitude: " HorizontalAlignment="Left" FontSize="18" Height="25"
-            VerticalAlignment="Top" Margin="5,55,0,0"/>
+            VerticalAlignment="Top" Margin="20,55,0,0"/>
         <TextBox x:Name="tbPickupLocationLat" HorizontalAlignment="Left" Width="100"
-            VerticalAlignment="Top" Margin="80,55,0,0" FontSize="18"/>
+            VerticalAlignment="Top" Margin="95,55,0,0" FontSize="18"/>
         <!--Longitude-->
         <TextBlock Text="Longitude: " HorizontalAlignment="Left" FontSize="18" Height="25"
             VerticalAlignment="Top" Margin="5,90,0,0"/>
@@ -48,7 +48,7 @@
             VerticalAlignment="Top" Margin="95,90,5,0" FontSize="18"/>
 
 
-        <Button Content="OK" Click="OkButton_Click" Height="40" Margin="0,50,0,0"
-            VerticalAlignment="Bottom"/>
+        <Button Content="OK" Click="OkButton_Click" Height="40" Width="150" Margin="0,100,0,0"
+            VerticalAlignment="Center" />
     </Grid>
 </Window>

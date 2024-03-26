@@ -11,8 +11,11 @@ namespace TaxiMeterUI
         }
 
         private double pickupLocationLatitude;
+
         private double pickupLocationLongitude;
+
         private double destinationLatitude;
+
         private double destinationLongitude;
         public double PickupLocationLatitude
         {

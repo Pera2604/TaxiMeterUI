@@ -19,9 +19,9 @@
             <TextBlock x:Name="txtDateTime" Text="Date Time" FontSize="18" 
                        TextAlignment="Left"/>
         </Border>
-        <Border BorderBrush="Gray" BorderThickness="1" Width="150" Height="60"
+        <Border BorderBrush="Gray" BorderThickness="1" Width="250" Height="60"
                 HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10">
-            <StackPanel>
+            <StackPanel Width="250">
                 <TextBlock x:Name="txtStatus" Text="Status" FontSize="18" TextAlignment="Left"/>
                 <TextBlock x:Name="txtPrice" Text="Price" FontSize="18" TextAlignment="Left"/>
             </StackPanel>
@@ -54,5 +54,8 @@
             <TextBlock x:Name="txtDistance" Text="Distance travelled:" FontSize="18"/>
             <TextBlock x:Name="txtDuration" Text="Duration:" FontSize="18"/>
         </StackPanel>
+        <Button Grid.Row="2" FontSize="20" Width="100" Height="40" HorizontalAlignment="Center"
+                VerticalAlignment="Top" Margin="10" Content="Reset" Click="btnReset_Click"
+                Name="btnReset"/>
     </Grid>
 </Window>
