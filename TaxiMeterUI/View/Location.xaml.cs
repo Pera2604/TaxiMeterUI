@@ -1,35 +1,32 @@
 ﻿using System.Windows;
+using TaxiMeterUI;
 
-namespace TaxiMeterUI.View
+namespace TaxiMeterUI
 {
-    internal class Location
+    public partial class Location : Window
     {
-        private double pickupLocationLatitude;
+        public double PickupLocationLatitude { get; set; }
+        public double PickupLocationLongitude { get; set; }
+        public double DestinationLatitude { get; set; }
+        public double DestinationLongitude { get; set; }
 
-        private double pickupLocationLongitude;
+        public Location()
+        {
+            InitializeComponent();
+        }
 
-        private double destinationLatitude;
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            PickupLocationLatitude = InputLatitude(tbPickupLocationLat.Text);
+            DestinationLatitude = InputLatitude(tbDestinationLat.Text);
 
-        private double destinationLongitude;
-        public double PickupLocationLatitude
-        {
-            get { return pickupLocationLatitude; }
-            set { pickupLocationLatitude = value; }
-        }
-        public double PickupLocationLongitude
-        {
-            get { return pickupLocationLongitude; }
-            set { pickupLocationLongitude = value; }
-        }
-        public double DestinationLatitude
-        {
-            get { return destinationLatitude; }
-            set { destinationLatitude = value; }
-        }
-        public double DestinationLongitude
-        {
-            get { return destinationLongitude; }
-            set { destinationLongitude = value; }
+            PickupLocationLongitude = InputLongitude(tbPickupLocationLong.Text);
+            DestinationLongitude = InputLongitude(tbDestinationLong.Text);
+
+            if (PickupLocationLatitude != -1 && PickupLocationLongitude != -1 && DestinationLatitude != -1 && DestinationLongitude != -1)
+            {
+                Close();
+            }
         }
 
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
@@ -57,7 +54,7 @@ namespace TaxiMeterUI.View
             return angle * (Math.PI / 180);
         }
 
-        public double InputLatitude(string propertyValue)
+        private double InputLatitude(string propertyValue)
         {
             if (double.TryParse(propertyValue, out double result))
             {
@@ -78,7 +75,7 @@ namespace TaxiMeterUI.View
             }
         }
 
-        public double InputLongitude(string propertyValue)
+        private double InputLongitude(string propertyValue)
         {
             if (double.TryParse(propertyValue, out double result))
             {
