@@ -10,25 +10,26 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />
             <RowDefinition Height="50"/>
-            <RowDefinition Height="200" />  <!-- Grid.Row 2 -->
+            <RowDefinition Height="200" />
+            <!-- Grid.Row 2 -->
         </Grid.RowDefinitions>
         <!-- Grid.Row 0 -->
         <Border BorderBrush="Gray"  BorderThickness="1"/>
         <Border BorderBrush="Gray" BorderThickness="1" Width="200" Height="30"
                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
-            <TextBlock x:Name="txtDateTime" Text="Date Time" FontSize="18" 
+            <TextBlock x:Name="txtDateTime" Text="{Binding DateTime}" FontSize="18" 
                        TextAlignment="Left"/>
         </Border>
         <Border BorderBrush="Gray" BorderThickness="1" Width="250" Height="60"
                 HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10">
             <StackPanel Width="250">
-                <TextBlock x:Name="txtStatus" Text="Status" FontSize="18" TextAlignment="Left"/>
-                <TextBlock x:Name="txtPrice" Text="Price" FontSize="18" TextAlignment="Left"/>
+                <TextBlock x:Name="txtStatus" Text="{Binding Status}" FontSize="18" TextAlignment="Left"/>
+                <TextBlock x:Name="txtPrice" Text="{Binding Price}" FontSize="18" TextAlignment="Left"/>
             </StackPanel>
         </Border>
         <Border BorderBrush="Gray" BorderThickness="1" Width="150" Height="40" 
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
-            <TextBlock x:Name="txtTariff" Text="Tariff" FontSize="18" TextAlignment="Left"/>
+            <TextBlock x:Name="txtTariff" Text="{Binding Tariff}" FontSize="18" TextAlignment="Left"/>
         </Border>
         <Button x:Name="btnTariff" Width="75" Height="40" HorizontalAlignment="Right" 
                 VerticalAlignment="Bottom" Margin="0,0,20,10" Content="Tariff"
@@ -48,11 +49,11 @@
         <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Margin="0,0,0,21" />
         <TextBlock Grid.Row="2" Text="Last Ride Data:" FontSize="24" Margin="7,0,0,21"/>
         <StackPanel Grid.Row="2" Margin="10,35,0,0">
-            <TextBlock x:Name="txtStartTime" Text="Start time:" FontSize="18"/>
-            <TextBlock x:Name="txtEndTime" Text="End time:" FontSize="18"/>
-            <TextBlock x:Name="txtTotalPrice" Text="Total Price:" FontSize="18"/>
-            <TextBlock x:Name="txtDistance" Text="Distance travelled:" FontSize="18"/>
-            <TextBlock x:Name="txtDuration" Text="Duration:" FontSize="18"/>
+            <TextBlock x:Name="txtStartTime" Text="{Binding StartTime}" FontSize="18"/>
+            <TextBlock x:Name="txtEndTime" Text="{Binding EndTime}" FontSize="18"/>
+            <TextBlock x:Name="txtTotalPrice" Text="{Binding TotalPrice}" FontSize="18"/>
+            <TextBlock x:Name="txtDistance" Text="{Binding Distance}" FontSize="18"/>
+            <TextBlock x:Name="txtDuration" Text="{Binding Duration}" FontSize="18"/>
         </StackPanel>
         <Button Grid.Row="2" FontSize="20" Width="100" Height="40" HorizontalAlignment="Center"
                 VerticalAlignment="Top" Margin="10" Content="Reset" Click="btnReset_Click"

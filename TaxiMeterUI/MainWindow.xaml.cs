@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Timers;
+using TaxiMeterUI.ViewModel;
 
 namespace TaxiMeterUI
 {
@@ -16,6 +17,7 @@ namespace TaxiMeterUI
     {
         private TaxiRide taxiRide;
         private CancellationTokenSource cancellationTokenSource;
+        private MainWindowViewModel viewModel;
         private DispatcherTimer timer = new DispatcherTimer();
 
         public double TotalLiveTaxiPrice { get; set; }
@@ -33,10 +35,13 @@ namespace TaxiMeterUI
         {
             InitializeComponent();
             mainGrid.RowDefinitions[2].Height = new GridLength(0);
-            DateAndTime();
-            Closing += MainWindow_Closing; // Subscribe to the Closing event
 
             taxiRide = new TaxiRide();
+            viewModel = new MainWindowViewModel();
+            DataContext = viewModel; // Set the data context to the view model
+
+            DateAndTime();
+            Closing += MainWindow_Closing; // Subscribe to the Closing event
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -60,7 +65,7 @@ namespace TaxiMeterUI
         private void Timer_Tick(object sender, EventArgs e)
         {
             // Update the TextBlock with the current date and time.
-            txtDateTime.Text = DateTime.Now.ToString();
+            viewModel.DateTime = DateTime.Now.ToString();
         }
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
@@ -75,31 +80,31 @@ namespace TaxiMeterUI
             cancellationTokenSource = new CancellationTokenSource();
             Location location = new Location();
 
-            txtStatus.Text = "Status: Hired";
+            viewModel.Status = "Status: Hired";
 
-            if (txtStartTime.Text == "Start time:")
+            if (viewModel.StartTime == null)
             {
                 string startTime = DateTime.Now.ToString();
-                txtStartTime.Text = $"Start time: {startTime}";
+                viewModel.StartTime = $"Start time: {startTime}";
             }
 
             Distance = location.CalculateDistance(PickupLocationLat, PickupLocationLong, DestinationLat, DestinationLong);
-            txtDistance.Text = $"Distance travelled: {Distance:0.00} km";
+            viewModel.Distance = $"Distance travelled: {Distance:0.00} km";
 
             Duration = taxiRide.CalculateRideDuration(Distance);
-            txtDuration.Text = $"Duration: {Duration:0.00} minutes";
+            viewModel.Duration = $"Duration: {Duration:0.00} minutes";
 
             DefaultTariffValue();
             Price = taxiRide.CalculatePrice(Distance, DistanceRate, Duration, DurationRate);
             double totalPrice = Price;
-            txtTotalPrice.Text = $"Total Price: {totalPrice:0.00} EUR";
+            viewModel.TotalPrice = $"Total Price: {totalPrice:0.00} EUR";
 
             await LiveTaxiFare(TotalLiveTaxiPrice, Distance, cancellationTokenSource.Token);
         }
 
         private void btnPayment_Click(object sender, RoutedEventArgs e)
         {
-            txtStatus.Text = "Status: Processing Payment";
+            viewModel.Status = "Status: Processing Payment";
 
             if (cancellationTokenSource != null)
             {
@@ -112,32 +117,29 @@ namespace TaxiMeterUI
         private void btnEnd_Click(object sender, RoutedEventArgs e)
         {
             mainGrid.RowDefinitions[2].Height = new GridLength(200);
-            txtStatus.Text = "Status: For Hire";
+            viewModel.Status = "Status: For Hire";
 
-            if (txtEndTime.Text == "End time:")
-            {
-                string endTime = DateTime.Now.ToString();
-                txtEndTime.Text = $"End time: {endTime}";
-            }
+            string endTime = DateTime.Now.ToString();
+            viewModel.EndTime = $"End time: {endTime}";
         }
 
         private void btnTariff_Click(object sender, RoutedEventArgs e)
         {
-            if (txtTariff.Text == "Tariff" || txtTariff.Text == "Tariff 3")
+            if (viewModel.Tariff == null || viewModel.Tariff == "Tariff 3")
             {
-                txtTariff.Text = "Tariff 1";
+                viewModel.Tariff = "Tariff 1";
                 DistanceRate = 1.09;
                 DurationRate = 0.283;
             }
-            else if (txtTariff.Text == "Tariff 1")
+            else if (viewModel.Tariff == "Tariff 1")
             {
-                txtTariff.Text = "Tariff 2";
+                viewModel.Tariff = "Tariff 2";
                 DistanceRate = 1.80;
                 DurationRate = 0.40;
             }
-            else if (txtTariff.Text == "Tariff 2")
+            else if (viewModel.Tariff == "Tariff 2")
             {
-                txtTariff.Text = "Tariff 3";
+                viewModel.Tariff = "Tariff 3";
                 DistanceRate = 2.00;
                 DurationRate = 0.50;
             }
@@ -163,9 +165,9 @@ namespace TaxiMeterUI
 
         private void ResetTaximeter()
         {
-            txtStartTime.Text = "Start time:";
-            txtEndTime.Text = "End time:";
-            txtPrice.Text = "Price: 0 EUR";
+            viewModel.StartTime = null;
+            viewModel.EndTime = "End time:";
+            viewModel.Price = "Price: 0 EUR";
             cancellationTokenSource = null;
             TotalLiveTaxiPrice = 0;
             PickupLocationLat = 0;
@@ -192,10 +194,10 @@ namespace TaxiMeterUI
 
                 if (liveTaxiPrice > Price)
                 {
-                    txtPrice.Text = $"Price: {Price:0.00} EUR";
+                    viewModel.Price = $"Price: {Price:0.00} EUR";
                     break;
                 }
-                txtPrice.Text = $"Price: {liveTaxiPrice:0.00} EUR";
+                viewModel.Price = $"Price: {liveTaxiPrice:0.00} EUR";
 
                 await Task.Delay(1000);
             }
@@ -207,7 +209,7 @@ namespace TaxiMeterUI
         {
             if (DistanceRate == 0 || DurationRate == 0)
             {
-                txtTariff.Text = "Tariff 1";
+                viewModel.Tariff = "Tariff 1";
                 DistanceRate = 1.09;
                 DurationRate = 0.283;
             }
